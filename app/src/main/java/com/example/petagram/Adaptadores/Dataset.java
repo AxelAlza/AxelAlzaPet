@@ -1,6 +1,10 @@
-package com.example.petagram;
+package com.example.petagram.Adaptadores;
+
+import com.example.petagram.Mascota.Mascota;
+import com.example.petagram.R;
 
 import java.util.ArrayList;
+
 
 public class Dataset {
     ArrayList<Mascota> mascotas = new ArrayList<>();
@@ -14,10 +18,8 @@ public class Dataset {
         mascotas.add(new Mascota("Teleperro", 13, R.drawable.dog));
         mascotas.add(new Mascota("Porque me gritan", 200, R.drawable.meme));
     }
-
     public ArrayList<Mascota> getData() {
         return mascotas;
     }
-    }
-
+}
 

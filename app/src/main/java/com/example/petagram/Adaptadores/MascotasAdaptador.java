@@ -1,4 +1,4 @@
-package com.example.petagram;
+package com.example.petagram.Adaptadores;
 
 
 import android.app.Activity;
@@ -9,34 +9,39 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.example.petagram.Mascota.Mascota;
+import com.example.petagram.R;
 import java.util.ArrayList;
 
 public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.MascotaViewHolder> {
 
     Activity activity;
-    ArrayList<Mascota> Mascotas;
+    ArrayList<Mascota> TodasLasMascotas;
+    ArrayList<Mascota> MascotasVisibles;
 
-    public MascotasAdaptador(ArrayList<Mascota> mascotas, Activity activity) {
-        Mascotas = mascotas;
+    public MascotasAdaptador(ArrayList<Mascota> mascotas ) {
+        MascotasVisibles = mascotas;
+        TodasLasMascotas = mascotas;
+
+    }
+
+    public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
-    public ArrayList<Mascota> getMascotas() {
-        return Mascotas;
-    }
-
     public void filtrarNoLikeados() {
-        ArrayList<Mascota> resultado = new ArrayList();
-        for (Mascota m : Mascotas) {
+        ArrayList<Mascota> resultado = new ArrayList<>();
+        for (Mascota m : MascotasVisibles) {
             if (m.isLikeado()) {
                 resultado.add(m);
             }
         }
-        Mascotas = resultado;
+        MascotasVisibles = resultado;
+    }
+    public void MostrarTodo(){
+        MascotasVisibles = TodasLasMascotas;
     }
 
     @NonNull
@@ -48,7 +53,7 @@ public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.Ma
 
     @Override
     public void onBindViewHolder(@NonNull final MascotaViewHolder holder, int position) {
-        final Mascota m = Mascotas.get(position);
+        final Mascota m = MascotasVisibles.get(position);
         holder.IbLike.setTag(0);
         holder.TvNombre.setText(m.getNombre());
         holder.TvLikes.setText(String.valueOf(m.getLikes()));
@@ -61,28 +66,25 @@ public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.Ma
             holder.IbLike.setTag(0);
             holder.IbLike.setImageResource(R.drawable.ic_nolike);
         }
-        holder.IbLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((int) (holder.IbLike.getTag()) == 0) {
-                    m.darLike();
-                    holder.IbLike.setTag(1);
-                    Toast.makeText(activity, "Le diste like a " + m.getNombre() + " :)", Toast.LENGTH_SHORT).show();
-                    holder.IbLike.setImageResource(R.drawable.ic_like);
-                } else {
-                    m.quitarLike();
-                    holder.IbLike.setTag(0);
-                    Toast.makeText(activity, "Le quitaste like a " + m.getNombre() + " :(", Toast.LENGTH_SHORT).show();
-                    holder.IbLike.setImageResource(R.drawable.ic_nolike);
-                }
-                holder.TvLikes.setText(String.valueOf(m.getLikes()));
+        holder.IbLike.setOnClickListener(v -> {
+            if ((int) (holder.IbLike.getTag()) == 0) {
+                m.darLike();
+                holder.IbLike.setTag(1);
+                Toast.makeText(activity, "Le diste like a " + m.getNombre() + " :)", Toast.LENGTH_SHORT).show();
+                holder.IbLike.setImageResource(R.drawable.ic_like);
+            } else {
+                m.quitarLike();
+                holder.IbLike.setTag(0);
+                Toast.makeText(activity, "Le quitaste like a " + m.getNombre() + " :(", Toast.LENGTH_SHORT).show();
+                holder.IbLike.setImageResource(R.drawable.ic_nolike);
             }
+            holder.TvLikes.setText(String.valueOf(m.getLikes()));
         });
     }
 
     @Override
     public int getItemCount() {
-        return Mascotas.size();
+        return MascotasVisibles.size();
     }
 
     public static class MascotaViewHolder extends RecyclerView.ViewHolder {

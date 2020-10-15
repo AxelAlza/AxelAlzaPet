@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
         android:id="@+id/favoritos"
         android:icon="@drawable/ic_favoritos_w"
         android:title="Favoritos"
         android:contentDescription="Favoritos"
         app:showAsAction="ifRoom"
-        
-
         />
-
     <item
-        android:id="@+id/more"
+        android:id="@+id/contacto"
         android:icon="@drawable/ic_more"
-        android:title="Mas"
-        android:contentDescription="Mas"
+        android:title="Contacto"
+        android:contentDescription="Contacto"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/acercade"
+        android:icon="@drawable/ic_more"
+        android:title="Acerca de"
+        android:contentDescription="Acerca de"
         app:showAsAction="never" />
 
 </menu>

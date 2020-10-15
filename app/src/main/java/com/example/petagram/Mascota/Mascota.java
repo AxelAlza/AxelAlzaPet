@@ -1,4 +1,4 @@
-package com.example.petagram;
+package com.example.petagram.Mascota;
 
 
 import android.os.Parcel;

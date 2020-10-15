@@ -12,6 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         app:title="@string/app_name"
         android:elevation="4dp"
+        app:layout_scrollFlags="scroll|enterAlways"
         app:menu="@menu/top_app_bar"
         app:navigationIcon="@drawable/ic_paw_w" />
 

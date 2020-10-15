@@ -5,8 +5,7 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/miactionbar2"
-        layout="@layout/action_bar_2"
+        layout="@layout/action_bar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
