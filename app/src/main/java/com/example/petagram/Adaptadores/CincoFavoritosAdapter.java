@@ -12,24 +12,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Update;
 
 import com.example.petagram.Mascota.Mascota;
 import com.example.petagram.Permanencia.Permanencia;
 import com.example.petagram.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.MascotaViewHolder> {
+public class CincoFavoritosAdapter extends RecyclerView.Adapter<CincoFavoritosAdapter.MascotaViewHolder> {
 
     Activity activity;
     List<Mascota> MascotasVisibles;
 
-    public MascotasAdaptador(List<Mascota> mascotas) {
+    public CincoFavoritosAdapter(List<Mascota> mascotas) {
         MascotasVisibles = mascotas;
 
     }
@@ -39,12 +37,11 @@ public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.Ma
     }
 
     public void updateAdapter(){
-        List<Mascota> nuevo;
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                MascotasVisibles = Permanencia.ConexionSql.getDb().MascotaDao().getAll();
+                MascotasVisibles = Permanencia.ConexionSql.getDb().MascotaDao().getGustados();
             }
         });
         executorService.shutdown();
@@ -86,6 +83,8 @@ public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.Ma
                     @Override
                     public void run() {
                         Permanencia.ConexionSql.getDb().MascotaDao().updateMascota(m);
+                        updateAdapter();
+                        notifyDataSetChanged();
                     }
                 });
                 executorService.shutdown();
@@ -104,6 +103,8 @@ public class MascotasAdaptador extends RecyclerView.Adapter<MascotasAdaptador.Ma
                     @Override
                     public void run() {
                         Permanencia.ConexionSql.getDb().MascotaDao().updateMascota(m);
+                        updateAdapter();
+                        notifyDataSetChanged();
                     }
                 });
                 executorService.shutdown();

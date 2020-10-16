@@ -7,15 +7,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.example.petagram.Permanencia.AppDatabase;
 import com.example.petagram.Adaptadores.PageAdapter;
-import com.example.petagram.Fragments.FragmentViewPerfil;
+import com.example.petagram.Permanencia.Permanencia;
+import com.example.petagram.Mascota.Mascota;
 import com.example.petagram.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-name").build();
+        Permanencia.ConexionSql.setDb(db);
         setContentView(R.layout.activity_main);
         Fvp = findViewById(R.id.VPviewpager);
         Tab = findViewById(R.id.tab);
@@ -45,14 +56,13 @@ public class MainActivity extends AppCompatActivity {
                         Fvp.setCurrentItem(1);
                 }
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                return;
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                return;
             }
         });
         setUpViewPager();
@@ -60,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                switch (position){
+                switch (position) {
                     case 0:
                         Tab.selectTab(Tab.getTabAt(0));
                         break;
@@ -104,12 +114,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setUpViewPager(){
-        Fvp.setAdapter(new PageAdapter(getSupportFragmentManager(),getLifecycle()));
+    public void setUpViewPager() {
+        Fvp.setAdapter(new PageAdapter(getSupportFragmentManager(), getLifecycle()));
 
 
     }
-
 
 
 }

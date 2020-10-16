@@ -11,13 +11,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.petagram.Adaptadores.MascotasAdaptador;
-import com.example.petagram.Adaptadores.Recursos;
+import com.example.petagram.Mascota.Mascota;
+import com.example.petagram.Permanencia.Permanencia;
 import com.example.petagram.R;
 import com.google.android.material.appbar.MaterialToolbar;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class CincoFavoritos extends AppCompatActivity {
     RecyclerView listaMascotas;
     MaterialToolbar Mt;
+    List<Mascota> mascotas;
 
 
 
@@ -41,17 +48,33 @@ public class CincoFavoritos extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         listaMascotas.setLayoutManager(llm);
-        InicializarAdaptador();
+        inicializarAdaptador();
         //Recycler View Init//
 
     }
 
-    public void InicializarAdaptador() {
-        Recursos.MascotaAdaptador.setActivity(this);
-        Recursos.MascotaAdaptador.getAdaptador().filtrarNoLikeados();
-        listaMascotas.setAdapter(Recursos.MascotaAdaptador.getAdaptador());
+    private void inicializarAdaptador() {
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                mascotas = Permanencia.ConexionSql.getDb().MascotaDao().getGustados();
+            }
+        });
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        MascotasAdaptador ma = new MascotasAdaptador(mascotas);
+        ma.setActivity(this);
+        listaMascotas.setAdapter(ma);
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

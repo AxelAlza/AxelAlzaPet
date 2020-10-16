@@ -8,22 +8,26 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.petagram.Mascota.Mascota;
+import com.example.petagram.Permanencia.Permanencia;
 import com.example.petagram.R;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class MascotasAdaptadorPerfil extends RecyclerView.Adapter<MascotasAdaptadorPerfil.MascotaViewHolder> {
 
     Activity activity;
-    ArrayList<Mascota> MascotasVisibles;
+    List<Mascota> MascotasVisibles;
 
-    public MascotasAdaptadorPerfil(ArrayList<Mascota> mascotas ) {
+    public MascotasAdaptadorPerfil(List<Mascota> mascotas ) {
         MascotasVisibles = mascotas;
 
 
@@ -47,14 +51,30 @@ public class MascotasAdaptadorPerfil extends RecyclerView.Adapter<MascotasAdapta
     public void onBindViewHolder(@NonNull final MascotaViewHolder holder, int position) {
         final Mascota m = MascotasVisibles.get(position);
         holder.IbLike.setTag(0);
-        holder.TvNombre.setText(m.getNombre());
-        holder.TvLikes.setText(String.valueOf(m.getLikes()));
-        holder.IvFoto.setImageResource(m.getFoto());
+        holder.TvNombre.setText(m.getMascotaNombre());
+        holder.TvLikes.setText(String.valueOf(m.getMascotaRaits()));
+        holder.IvFoto.setImageResource(m.getMascotaFoto());
     }
 
     @Override
     public int getItemCount() {
         return MascotasVisibles.size();
+    }
+
+    public void updateAdapter() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                MascotasVisibles = Permanencia.ConexionSql.getDb().MascotaDao().getAll();
+            }
+        });
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static class MascotaViewHolder extends RecyclerView.ViewHolder {
